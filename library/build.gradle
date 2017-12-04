@@ -1,0 +1,27 @@
+apply plugin: 'kotlin'
+apply from: "../scripts/maven.gradle"
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+}
+
+def artifactsDir = "$buildDir/artifacts"
+
+task sourcePackage(type: Jar) {
+    baseName = artifact
+    classifier = "sources"
+    version rootProject.ext.version
+    from sourceSets.main.kotlin.srcDirs
+    destinationDir file(artifactsDir)
+}
+
+task createArtifacts(type: Copy) {
+    dependsOn sourcePackage, generatePom, build
+
+    def filename = jar.outputs.files[0]
+    from filename
+    into file(artifactsDir)
+    rename {
+        "${rootProject.ext.artifact}-${rootProject.ext.version}.jar"
+    }
+}
