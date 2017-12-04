@@ -9,8 +9,9 @@ repositories {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "com.github.d-max:dsl-logger:0.1"
+    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "com.github.d-max:dsl-logger:0.1"
+    implementation project(":common")
 }
 
 android {
@@ -34,7 +35,7 @@ android {
 task createArtifacts
 
 task sourcePackage(type: Jar) {
-    baseName = "$artifact-android"
+    baseName = "$rootProject.ext.artifact-android"
     classifier = "sources"
     version rootProject.ext.androidVersionName
     from android.sourceSets.main.kotlin.srcDirs
@@ -66,9 +67,9 @@ task generatePom {
             project {
                 groupId "com.github.d-max"
                 artifactId "dsl-logger-android"
-                version rootProject.ext.libraryVersion
+                version rootProject.ext.androidVersionName
                 packaging "jar"
-                name "Android implementation od DSL logger in Kotlin"
+                name "Android implementation of DSL logger in Kotlin"
                 description "Androd verions of logging domain-specific language implementation in Kotlin"
                 url "https://github.com/d-max/dsl-logger"
                 scm {

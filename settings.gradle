@@ -1,3 +1,7 @@
-include ':library', ':library-android', ':sample'
+include ':library'
+include ':library-android'
+include ':library-slf4j'
+include ':common'
+include ':sample'
 
 rootProject.name = "DSL logger"
