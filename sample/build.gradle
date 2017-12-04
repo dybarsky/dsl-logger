@@ -1,12 +1,37 @@
-apply plugin: 'kotlin'
-
-repositories {
-    maven {
-        url "https://dl.bintray.com/d-max/dsl-logger"
-    }
-}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
 //    implementation project(":library")
-    implementation "com.github.d-max:dsl-logger:0.1"
+//    implementation project(":library-slf4j")
+
+    implementation "dmax.dsl:logger:${rootProject.ext.libraryVersion}"
+    implementation "dmax.dsl:logger-slf4j:${rootProject.ext.slf4jVersion}"
+    implementation "dmax.dsl:logger-android:${rootProject.ext.androidVersionName}@aar"
+
+    implementation "org.slf4j:slf4j-jdk14:1.7.25"
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.androidVersionCode
+        versionName rootProject.ext.androidVersionName
+        multiDexEnabled true
+    }
+
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
 }

@@ -1,27 +1,20 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'maven'
-
-repositories {
-    maven {
-        url "https://dl.bintray.com/d-max/dsl-logger"
-    }
-}
+apply from: "../scripts/maven.gradle"
 
 dependencies {
-    api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    api "com.github.d-max:dsl-logger:0.1"
-    implementation project(":common")
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api "dmax.dsl:logger:${rootProject.ext.libraryVersion}"
 }
 
 android {
 
-    compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 17
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.androidVersionCode
         versionName rootProject.ext.androidVersionName
     }
@@ -64,31 +57,22 @@ task generatePom {
     createArtifacts.dependsOn it
     doLast {
         pom {
+            def pom = delegate as org.gradle.api.publish.maven.MavenPom
             project {
-                groupId "com.github.d-max"
-                artifactId "dsl-logger-android"
+                groupId "dmax.dsl"
+                artifactId "logger-android"
                 version rootProject.ext.androidVersionName
                 packaging "jar"
-                name "Android implementation of DSL logger in Kotlin"
+                name "Android implementation of writer for DSL logger in Kotlin"
                 description "Androd verions of logging domain-specific language implementation in Kotlin"
-                url "https://github.com/d-max/dsl-logger"
-                scm {
-                    url "https://github.com/d-max/dsl-logger"
-                    connection "scm:git@github.com:d-max/dsl-logger.git"
-                    developerConnection "scm:git@github.com:d-max/dsl-logger.git"
-                }
-                licenses {
-                    license {
-                        name "MIT License"
-                        url "http://www.opensource.org/licenses/mit-license.php"
-                        distribution "repo"
-                    }
-                }
-                developers {
-                    developer {
-                        id "d-max"
-                        name "Maksym Dybarskyi"
-                        email "maxim.dybarskyy@gmail.com"
+                project.ext.applyMavenAttributes.doCall(pom)
+                // maven plugin can't catch new android `api` dependency scope
+                dependencies {
+                    dependency {
+                        groupId "dmax.dsl"
+                        artifactId "logger"
+                        version rootProject.ext.libraryVersion
+                        scope "provided"
                     }
                 }
             }

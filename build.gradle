@@ -1,9 +1,14 @@
 ext {
-    artifact = "dsl-logger"
+    artifact = "logger"
     libraryVersion = "0.1"
     slf4jVersion = "0.1"
     androidVersionName = "0.1"
     androidVersionCode = 1
+
+    compileSdkVersion = 27
+    minSdkVersion = 17
+    targetSdkVersion = 27
+    buildToolsVersion = "27.0.1"
 
     artifactsDir = "$rootProject.buildDir/artifacts"
 }
@@ -29,5 +34,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            url "https://dl.bintray.com/d-max/dsl-logger"
+        }
     }
 }
