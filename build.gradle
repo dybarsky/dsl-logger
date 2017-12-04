@@ -1,6 +1,10 @@
 ext {
     artifact = "dsl-logger"
-    version = "0.1"
+    libraryVersion = "0.1"
+    androidVersionName = "0.1"
+    androidVersionCode = 1
+
+    artifactsDir = "$rootProject.buildDir/artifacts"
 }
 
 buildscript {
@@ -8,10 +12,12 @@ buildscript {
     ext.kotlinVersion = '1.2.0'
 
     repositories {
+        google()
         jcenter()
     }
 
     dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -20,6 +26,7 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }

@@ -6,7 +6,7 @@ task generatePom {
             project {
                 groupId "com.github.d-max"
                 artifactId "dsl-logger"
-                version rootProject.ext.version
+                version rootProject.ext.libraryVersion
                 packaging "jar"
                 name "DSL logger in Kotlin"
                 description "Logging domain-specific language implementation in Kotlin"
@@ -31,6 +31,6 @@ task generatePom {
                     }
                 }
             }
-        }.writeTo("$buildDir/artifacts/${rootProject.ext.artifact}-${rootProject.ext.version}.pom")
+        }.writeTo("$buildDir/artifacts/${rootProject.ext.artifact}-${rootProject.ext.libraryVersion}.pom")
     }
 }

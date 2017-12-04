@@ -1,27 +1,64 @@
 apply plugin: 'kotlin'
-apply from: "../scripts/maven.gradle"
+apply plugin: 'maven'
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 }
 
-def artifactsDir = "$buildDir/artifacts"
+task createArtifacts
 
 task sourcePackage(type: Jar) {
-    baseName = artifact
+    baseName = rootProject.ext.artifact
     classifier = "sources"
-    version rootProject.ext.version
+    version rootProject.ext.libraryVersion
     from sourceSets.main.kotlin.srcDirs
-    destinationDir file(artifactsDir)
+    destinationDir file(rootProject.ext.artifactsDir)
+    createArtifacts.dependsOn it
 }
 
-task createArtifacts(type: Copy) {
-    dependsOn sourcePackage, generatePom, build
-
+task copyJar(type: Copy) {
     def filename = jar.outputs.files[0]
     from filename
-    into file(artifactsDir)
+    into file(rootProject.ext.artifactsDir)
     rename {
-        "${rootProject.ext.artifact}-${rootProject.ext.version}.jar"
+        "${rootProject.ext.artifact}-${rootProject.ext.libraryVersion}.jar"
+    }
+    dependsOn jar
+    createArtifacts.dependsOn it
+}
+
+task generatePom {
+    createArtifacts.dependsOn it
+    doLast {
+        pom {
+            project {
+                groupId "com.github.d-max"
+                artifactId "dsl-logger"
+                version rootProject.ext.libraryVersion
+                packaging "jar"
+                name "DSL logger in Kotlin"
+                description "Logging domain-specific language implementation in Kotlin"
+                url "https://github.com/d-max/dsl-logger"
+                scm {
+                    url "https://github.com/d-max/dsl-logger"
+                    connection "scm:git@github.com:d-max/dsl-logger.git"
+                    developerConnection "scm:git@github.com:d-max/dsl-logger.git"
+                }
+                licenses {
+                    license {
+                        name "MIT License"
+                        url "http://www.opensource.org/licenses/mit-license.php"
+                        distribution "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        id "d-max"
+                        name "Maksym Dybarskyi"
+                        email "maxim.dybarskyy@gmail.com"
+                    }
+                }
+            }
+        }.writeTo("$rootProject.ext.artifactsDir/${rootProject.ext.artifact}-${rootProject.ext.libraryVersion}.pom")
     }
 }
