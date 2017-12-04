@@ -1,0 +1,12 @@
+apply plugin: 'kotlin'
+
+repositories {
+    maven {
+        url "https://dl.bintray.com/d-max/dsl-logger"
+    }
+}
+
+dependencies {
+//    implementation project(":library")
+    implementation "com.github.d-max:dsl-logger:0.1"
+}
